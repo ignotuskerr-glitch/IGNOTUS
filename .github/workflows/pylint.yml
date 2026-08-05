@@ -20,4 +20,4 @@ jobs:
 
       - name: Run Ignotus
         run: |
-          python main.py --red-mode
+          python main.py --red-mode --red-profile full
