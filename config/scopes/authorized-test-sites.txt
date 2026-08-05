@@ -1,6 +1,2 @@
 # Autorização informada pelo proprietário em 2026-08-04.
-in: go-beast.vercel.app
-in: ops-web-beta.vercel.app
-in: vps64602.publiccloud.com.br
-in: 191.252.200.164
-in: papirar-oficial.vercel.app
+in: dominio.app
