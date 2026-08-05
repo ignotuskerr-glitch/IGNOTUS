@@ -1,0 +1,25 @@
+id: firebase-misconfig
+info:
+  name: Firebase Database Sem Autenticação
+  author: ingotus
+  severity: critical
+  description: >-
+    Banco de dados Firebase/Firestore acessível sem autenticação — permite
+    leitura ou escrita arbitrária de dados de usuários.
+  tags: [firebase, misconfig, cloud]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/.json"
+      - "{{BaseURL}}/users.json"
+      - "{{BaseURL}}/data.json"
+
+    matchers-condition: or
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["firebaseio.com", "\"rules\"", "\"read\"", "\"write\""]
+        condition: or
+        case-insensitive: true

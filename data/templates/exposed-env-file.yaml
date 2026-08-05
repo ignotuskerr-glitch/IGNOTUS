@@ -1,0 +1,26 @@
+id: exposed-env-file
+info:
+  name: Arquivo .env Exposto
+  author: ingotus
+  severity: critical
+  description: >
+    Arquivo .env acessível publicamente. Pode conter DATABASE_URL,
+    SECRET_KEY, API_KEY e outras credenciais de produção.
+  tags: [exposure, secrets, misconfig]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/.env"
+      - "{{BaseURL}}/.env.local"
+      - "{{BaseURL}}/.env.production"
+      - "{{BaseURL}}/.env.backup"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["APP_KEY", "DB_PASSWORD", "SECRET_KEY", "DATABASE_URL", "API_KEY", "PASSWORD"]
+        condition: or
+        case-insensitive: true

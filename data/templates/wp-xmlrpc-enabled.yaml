@@ -1,0 +1,34 @@
+id: wp-xmlrpc-enabled
+info:
+  name: WordPress XML-RPC Habilitado
+  author: ingotus
+  severity: medium
+  description: >-
+    XML-RPC do WordPress habilitado. Permite ataques de força bruta amplificados
+    via multicall (1000 tentativas em 1 requisição), pingback SSRF e enumeração
+    de usuários. Desativar é recomendação de segurança padrão.
+  tags: [wordpress, xmlrpc, brute-force, ssrf, medium]
+
+requests:
+  - method: POST
+    paths:
+      - "{{BaseURL}}/xmlrpc.php"
+      - "{{BaseURL}}/wp/xmlrpc.php"
+
+    headers:
+      Content-Type: application/xml
+
+    body: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <methodCall>
+        <methodName>system.listMethods</methodName>
+        <params></params>
+      </methodCall>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["methodResponse", "wp.getUsersBlogs", "system.listMethods", "pingback.ping"]
+        condition: or

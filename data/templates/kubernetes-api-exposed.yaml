@@ -1,0 +1,27 @@
+id: kubernetes-api-exposed
+info:
+  name: Kubernetes API Server Exposto Sem Autenticação
+  author: ingotus
+  severity: critical
+  description: >-
+    Kubernetes API Server acessível publicamente sem autenticação.
+    Permite listar pods, secrets, namespaces e executar comandos nos containers (RCE).
+  tags: [kubernetes, k8s, api, unauth, rce, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/api/v1/namespaces"
+      - "{{BaseURL}}/api/v1/pods"
+      - "{{BaseURL}}/api/v1/secrets"
+      - "{{BaseURL}}:6443/api/v1/namespaces"
+      - "{{BaseURL}}:8080/api/v1/namespaces"
+      - "{{BaseURL}}/api"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["NamespaceList", "PodList", "SecretList", "apiVersion", "kind", "items"]
+        condition: or

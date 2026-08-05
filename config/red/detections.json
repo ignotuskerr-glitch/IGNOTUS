@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "mode": "strict-impact",
+  "policy": {
+    "runtime": "local-only",
+    "require_rule_id_for_validated": true,
+    "allow_unverified_as_impact": false,
+    "evidence_retention": "hash-and-metadata",
+    "secret_output": "redacted"
+  },
+  "detections": {
+    "process": {"status": "not_observed", "rule_id": null, "expected_signals": ["security_process_create", "sysmon_process_create"]},
+    "powershell": {"status": "not_observed", "rule_id": null, "expected_signals": ["powershell_script_block", "powershell_module", "sysmon_process_create"]},
+    "file": {"status": "not_observed", "rule_id": null, "expected_signals": ["sysmon_file_create"]},
+    "registry": {"status": "not_observed", "rule_id": null, "expected_signals": ["sysmon_registry_create_delete", "sysmon_registry_value_set"]},
+    "tcp_loopback": {"status": "not_observed", "rule_id": null, "expected_signals": ["sysmon_network_connect"]},
+    "named_pipe": {"status": "not_observed", "rule_id": null, "expected_signals": ["sysmon_pipe_create", "sysmon_pipe_connect"]}
+  }
+}

@@ -1,0 +1,32 @@
+id: backup-files-exposed
+info:
+  name: Arquivos de Backup Expostos
+  author: ingotus
+  severity: high
+  description: >-
+    Arquivos de backup (.sql, .zip, .tar.gz) acessíveis publicamente.
+    Podem conter banco de dados completo, código-fonte e credenciais de produção.
+  tags: [backup, exposure, misconfig]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/backup.sql"
+      - "{{BaseURL}}/backup.zip"
+      - "{{BaseURL}}/db.sql"
+      - "{{BaseURL}}/database.sql"
+      - "{{BaseURL}}/dump.sql"
+      - "{{BaseURL}}/site.zip"
+      - "{{BaseURL}}/backup.tar.gz"
+      - "{{BaseURL}}/www.zip"
+      - "{{BaseURL}}/backup.gz"
+      - "{{BaseURL}}/db_backup.sql"
+
+    matchers-condition: or
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["INSERT INTO", "CREATE TABLE", "DROP TABLE", "mysqldump"]
+        condition: or
+        case-insensitive: true

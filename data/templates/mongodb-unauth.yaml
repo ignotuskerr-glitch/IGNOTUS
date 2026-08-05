@@ -1,0 +1,25 @@
+id: mongodb-unauth
+info:
+  name: MongoDB Sem Autenticação
+  author: ingotus
+  severity: critical
+  description: >-
+    Instância MongoDB acessível sem autenticação. Permite leitura,
+    inserção e exclusão arbitrária de dados. Impacto direto em dados de usuários.
+  tags: [mongodb, database, unauth, exposure, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}:27017/"
+      - "{{BaseURL}}:27017/admin"
+      - "{{BaseURL}}:28017/"
+      - "{{BaseURL}}:28017/admin"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["version", "ok", "ismaster", "MongoDB", "writeBacksQueued", "bytesIn"]
+        condition: or

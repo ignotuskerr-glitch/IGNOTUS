@@ -1,0 +1,27 @@
+id: jupyter-notebook-exposed
+info:
+  name: Jupyter Notebook Exposto Sem Autenticação (RCE)
+  author: ingotus
+  severity: critical
+  description: >-
+    Jupyter Notebook acessível publicamente sem token ou senha.
+    Permite execução arbitrária de código Python no servidor (RCE direto).
+  tags: [jupyter, python, rce, unauth, exposure, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/api/kernels"
+      - "{{BaseURL}}/api/terminals"
+      - "{{BaseURL}}/api/contents"
+      - "{{BaseURL}}:8888/api/kernels"
+      - "{{BaseURL}}:8888/tree"
+      - "{{BaseURL}}/tree"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["kernel_name", "last_activity", "execution_state", "content_type", "Jupyter"]
+        condition: or

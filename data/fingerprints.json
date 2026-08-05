@@ -1,0 +1,341 @@
+{
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 IgnotusRecon/2.1",
+
+  "asn_provider_url": "http://ip-api.com/json/{ip}?fields=status,message,as,org",
+
+  "confidence_scores": {
+    "WAF":           95,
+    "CDN":           99,
+    "LOAD_BALANCER": 90,
+    "CLOUD_ORIGIN":  80,
+    "ORIGIN":        70,
+    "UNKNOWN":        0
+  },
+
+  "providers": {
+    "crtsh": {
+      "url":               "https://crt.sh/?q=%.{domain}&output=json",
+      "timeout_multiplier": 20
+    },
+    "alienvault": {
+      "url":               "https://otx.alienvault.com/api/v1/indicators/domain/{domain}/passive_dns",
+      "timeout_multiplier": 2
+    },
+    "hackertarget": {
+      "url":               "https://api.hackertarget.com/hostsearch/?q={domain}",
+      "timeout_multiplier": 2
+    },
+    "rapiddns": {
+      "url":               "https://rapiddns.io/subdomain/{domain}?full=1",
+      "timeout_multiplier": 3,
+      "regex":              "([a-z0-9][a-z0-9.-]+\\.{domain})"
+    }
+  },
+
+  "cdns": [
+    {
+      "name": "Cloudflare",
+      "cnames": [".cloudflare.com", "cloudflare.net"],
+      "headers": { "cf-ray": ".*", "server": "^cloudflare$" },
+      "asns": ["AS13335"],
+      "ip_prefixes": [
+        "103.21.244.", "103.22.200.", "103.31.4.",
+        "104.16.", "104.17.", "104.18.", "104.19.",
+        "104.20.", "104.21.", "104.22.", "104.23.",
+        "104.24.", "104.25.", "104.26.", "104.27.", "104.28.", "104.29.", "104.30.", "104.31.",
+        "108.162.", "131.0.72.", "141.101.",
+        "162.158.", "162.159.", "162.160.", "162.161.",
+        "172.64.", "172.65.", "172.66.", "172.67.", "172.68.", "172.69.", "172.70.", "172.71.",
+        "188.114.", "190.93.", "197.234.", "198.41.",
+        "2400:cb00:", "2405:8100:", "2405:b500:",
+        "2606:4700:", "2803:f800:", "2a06:98c0:", "2a06:98c1:", "2c0f:f248:"
+      ]
+    },
+    {
+      "name": "AWS CloudFront",
+      "cnames": [".cloudfront.net"],
+      "headers": { "x-amz-cf-id": ".*", "server": "^CloudFront$" },
+      "asns": ["AS16509"],
+      "ip_prefixes": ["13.32.", "13.33.", "13.35.", "52.46.", "52.84.", "52.85.", "64.252.", "70.132.", "99.84.", "205.251.", "216.137."]
+    },
+    {
+      "name": "Akamai",
+      "cnames": [".edgekey.net", ".edgesuite.net", ".akamai.net"],
+      "headers": { "x-cache": "AkamaiGHost" },
+      "asns": ["AS20940", "AS16625"]
+    },
+    {
+      "name": "Fastly",
+      "cnames": [".fastly.net", ".fastly-edge.com"],
+      "headers": { "x-fastly-request-id": ".*" },
+      "asns": ["AS54113"],
+      "ip_prefixes": ["23.235.32.", "43.249.72.", "103.244.50.", "103.245.222.", "103.245.223.", "104.156.", "151.101.", "157.52.64.", "167.82.", "172.111.64.", "185.31.16.", "199.27.72.", "199.232."]
+    },
+    {
+      "name": "Azure Front Door",
+      "cnames": [".azurefd.net", ".afd.azureedge.net"],
+      "headers": { "x-azure-ref": ".*" },
+      "asns": ["AS8075"],
+      "ip_prefixes": ["13.107.", "23.96.", "40.82.", "51.0.", "52.232.", "150.171."]
+    },
+    {
+      "name": "Google Edge",
+      "cnames": [".l.google.com"],
+      "headers": { "server": "^(sffe|gws|ghs)$" },
+      "asns": ["AS15169"]
+    },
+    {
+      "name": "Vercel",
+      "cnames": [".vercel-dns.com", ".vercel.app", ".now.sh"],
+      "headers": { "x-vercel-id": ".*" },
+      "asns": ["AS394536"],
+      "ip_prefixes": [
+        "76.76.21.", "76.76.22.", "76.76.23.", "76.76.24.",
+        "64.239.109.", "64.239.123.",
+        "66.33.60.", "66.33.61.", "66.33.62.", "66.33.63.",
+        "2a09:8280:"
+      ]
+    }
+  ],
+
+  "wafs": [
+    { "name": "Cloudflare WAF",      "headers": { "cf-mitigated": ".*", "cf-ray": ".*" } },
+    { "name": "Imperva Incapsula",   "headers": { "x-iinfo": ".*", "x-cdn": "^Incapsula$" } },
+    { "name": "Sucuri WAF",          "headers": { "x-sucuri-id": ".*", "x-sucuri-cache": ".*" } },
+    { "name": "AWS WAF v2",          "headers": { "x-amzn-requestid": ".*", "x-amz-apigw-id": ".*", "x-amz-cf-id": ".*" } },
+    { "name": "Akamai Bot Manager",  "headers": { "akamai-grn": ".*", "x-akamai-transformed": ".*" } },
+    { "name": "Barracuda WAF",       "headers": { "barra_counter_session": ".*" } },
+    { "name": "F5 BIG-IP ASM",       "headers": { "x-cnection": ".*", "x-wa-info": ".*" } },
+    { "name": "Fortinet FortiWeb",   "headers": { "fortiwafsid": ".*" } },
+    { "name": "ModSecurity / OWASP", "headers": { "x-mod-security": ".*", "server": ".*mod_security.*" } },
+    { "name": "Reblaze WAF",         "headers": { "x-reblaze-protection": ".*" } },
+    { "name": "Wallarm WAF",         "headers": { "x-wallarm-inline-protection": ".*" } },
+    { "name": "Radware AppWall",     "headers": { "x-sl-comp-state": ".*" } }
+  ],
+
+  "clouds": [
+    {
+      "name": "Amazon Web Services",
+      "cnames": [".amazonaws.com"],
+      "asns_patterns": ["Amazon.com", "AWS", "AMAZON"]
+    },
+    {
+      "name": "Google Cloud Platform",
+      "cnames": [".googleusercontent.com"],
+      "asns_patterns": ["Google LLC", "Google Cloud"]
+    },
+    {
+      "name": "Microsoft Azure",
+      "cnames": [".azurewebsites.net", ".cloudapp.azure.com"],
+      "asns_patterns": ["Microsoft Corporation", "MSFT"]
+    },
+    {
+      "name": "DigitalOcean",
+      "asns_patterns": ["DigitalOcean", "Digital Ocean"]
+    },
+    {
+      "name": "Hetzner",
+      "asns_patterns": ["Hetzner Online", "Hetzner"]
+    },
+    {
+      "name": "Linode / Akamai Cloud",
+      "asns_patterns": ["Linode", "Akamai Connected Cloud"]
+    },
+    {
+      "name": "OVHcloud",
+      "asns_patterns": ["OVH SAS", "OVHcloud"]
+    },
+    {
+      "name": "Vultr",
+      "asns_patterns": ["Vultr Holdings", "Choopa"]
+    }
+  ],
+
+  "takeovers": [
+    {
+      "service": "GitHub Pages",
+      "cnames": [".github.io"],
+      "fingerprints": ["There isn't a GitHub Pages site here", "github.com/pages-faq"]
+    },
+    {
+      "service": "Amazon S3",
+      "cnames": [".s3.amazonaws.com", ".s3-website", ".s3.vpce.amazonaws.com"],
+      "fingerprints": ["NoSuchBucket", "The specified bucket does not exist"]
+    },
+    {
+      "service": "Heroku",
+      "cnames": [".herokuapp.com", ".herokucdn.com"],
+      "fingerprints": ["no such app", "herokucdn.com/error-pages/no-such-app.html"]
+    },
+    {
+      "service": "Shopify",
+      "cnames": [".myshopify.com"],
+      "fingerprints": ["Sorry, this shop is currently unavailable"]
+    },
+    {
+      "service": "Tumblr",
+      "cnames": [".tumblr.com"],
+      "fingerprints": ["Whatever you were looking for is not here"]
+    },
+    {
+      "service": "Zendesk",
+      "cnames": [".zendesk.com"],
+      "fingerprints": ["Help Center Closed", "this help center no longer exists"]
+    },
+    {
+      "service": "Fastly",
+      "cnames": [".fastly.net"],
+      "fingerprints": ["Fastly error: unknown domain"]
+    },
+    {
+      "service": "Ghost",
+      "cnames": [".ghost.io"],
+      "fingerprints": ["The thing you were looking for is no longer here"]
+    },
+    {
+      "service": "Pantheon",
+      "cnames": [".pantheonsite.io"],
+      "fingerprints": ["404 error unknown site!"]
+    },
+    {
+      "service": "Netlify",
+      "cnames": [".netlify.app", ".netlify.com"],
+      "fingerprints": ["Not Found - Request ID"]
+    }
+  ],
+
+  "load_balancers": ["elb", "loadbalancer", "trafficmanager", "alb", "nlb", "glb", "haproxy"],
+
+  "hosting_keywords": [
+    "amazon", "aws", "google", "microsoft", "digitalocean",
+    "hetzner", "linode", "hosting", "ovh", "vps", "vultr", "rackspace", "choopa"
+  ],
+
+  "sensitive_ports": {
+    "21":   { "service": "FTP",         "severity": "HIGH"     },
+    "22":   { "service": "SSH",         "severity": "MEDIUM"   },
+    "23":   { "service": "Telnet",      "severity": "CRITICAL" },
+    "25":   { "service": "SMTP",        "severity": "MEDIUM"   },
+    "110":  { "service": "POP3",        "severity": "MEDIUM"   },
+    "143":  { "service": "IMAP",        "severity": "MEDIUM"   },
+    "3306": { "service": "MySQL",       "severity": "HIGH"     },
+    "5432": { "service": "PostgreSQL",  "severity": "HIGH"     },
+    "6379": { "service": "Redis",       "severity": "CRITICAL" },
+    "27017":{ "service": "MongoDB",     "severity": "CRITICAL" },
+    "9200": { "service": "Elasticsearch","severity": "CRITICAL"},
+    "2375": { "service": "Docker API",  "severity": "CRITICAL" }
+  },
+
+  "common_ports": [21, 22, 23, 25, 53, 80, 110, 143, 443, 3000, 3001, 3005, 3306, 5000, 5432, 6379, 8000, 8080, 8443, 8888, 9200, 27017],
+
+  "banner_probes": [
+    {
+      "ports": [80, 3000, 3001, 5000, 8000, 8080, 8888],
+      "send": "GET / HTTP/1.0\r\nHost: localhost\r\n\r\n",
+      "action": "first_line"
+    },
+    {
+      "ports": [443, 8443],
+      "send": "",
+      "action": "static",
+      "static_banner": "HTTPS service active"
+    },
+    {
+      "ports": [21, 22, 25, 110, 143],
+      "send": "",
+      "action": "recv_immediate"
+    },
+    {
+      "ports": [6379],
+      "send": "PING\r\n",
+      "action": "first_line"
+    },
+    {
+      "ports": [9200],
+      "send": "GET / HTTP/1.0\r\nHost: localhost\r\n\r\n",
+      "action": "first_line"
+    }
+  ],
+
+  "dns_resolvers": ["8.8.8.8", "1.1.1.1", "9.9.9.9", "8.8.4.4"],
+
+  "tech_signatures": [
+    { "name": "WordPress",   "headers": { "x-powered-by": "WordPress" },              "body": ["/wp-content/", "/wp-includes/"] },
+    { "name": "Drupal",      "headers": { "x-generator": "Drupal.*" },                "body": ["Drupal.settings", "/sites/default/files/"] },
+    { "name": "Joomla",      "headers": {},                                            "body": ["/components/com_", "Joomla! - Open Source Content Management"] },
+    { "name": "Laravel",     "headers": { "set-cookie": "laravel_session" },          "body": [] },
+    { "name": "Django",      "headers": { "set-cookie": "csrftoken" },                "body": ["csrfmiddlewaretoken"] },
+    { "name": "Ruby on Rails","headers": { "x-powered-by": "Phusion Passenger" },     "body": ["data-turbo", "rails-ujs"] },
+    { "name": "Spring Boot", "headers": {},                                            "body": ["Whitelabel Error Page", "Spring Framework"] },
+    { "name": "Next.js",     "headers": { "x-nextjs-page": ".*", "x-powered-by": "Next.js" }, "body": ["__NEXT_DATA__"] },
+    { "name": "React",       "headers": {},                                            "body": ["data-reactroot", "_reactListening"] },
+    { "name": "Vue.js",      "headers": {},                                            "body": ["data-v-", "__vue__", "__VUE__"] },
+    { "name": "Angular",     "headers": {},                                            "body": ["ng-version=", "ng-app="] },
+    { "name": "Jenkins",     "headers": { "x-jenkins": ".*" },                        "body": ["Jenkins-HUD", "Dashboard [Jenkins]"] },
+    { "name": "Grafana",     "headers": {},                                            "body": ["<title>Grafana</title>", "grafana-app"] },
+    { "name": "phpMyAdmin",  "headers": {},                                            "body": ["phpMyAdmin", "pma_username"] }
+  ],
+
+  "required_security_headers": [
+    {
+      "header":   "strict-transport-security",
+      "name":     "HSTS",
+      "severity": "LOW",
+      "desc":     "Ausência do cabeçalho de proteção HSTS (Strict-Transport-Security)"
+    },
+    {
+      "header":   "content-security-policy",
+      "name":     "CSP",
+      "severity": "LOW",
+      "desc":     "Ausência de Content-Security-Policy (CSP)"
+    },
+    {
+      "header":   "x-frame-options",
+      "name":     "X-Frame-Options",
+      "severity": "LOW",
+      "desc":     "Ausência do cabeçalho anti-clickjacking X-Frame-Options"
+    },
+    {
+      "header":   "x-content-type-options",
+      "name":     "X-Content-Type-Options",
+      "severity": "LOW",
+      "desc":     "Ausência do cabeçalho X-Content-Type-Options (nosniff)"
+    },
+    {
+      "header":   "referrer-policy",
+      "name":     "Referrer-Policy",
+      "severity": "LOW",
+      "desc":     "Ausência do cabeçalho Referrer-Policy"
+    },
+    {
+      "header":   "permissions-policy",
+      "name":     "Permissions-Policy",
+      "severity": "LOW",
+      "desc":     "Ausência do cabeçalho Permissions-Policy"
+    }
+  ],
+
+  "sensitive_paths": [
+    { "path": "/.git/HEAD",               "severity": "CRITICAL" },
+    { "path": "/.git/config",             "severity": "CRITICAL" },
+    { "path": "/.env",                    "severity": "HIGH"     },
+    { "path": "/.env.production",         "severity": "HIGH"     },
+    { "path": "/.env.local",              "severity": "HIGH"     },
+    { "path": "/.env.backup",             "severity": "HIGH"     },
+    { "path": "/config.php",              "severity": "HIGH"     },
+    { "path": "/wp-config.php",           "severity": "HIGH"     },
+    { "path": "/server-status",           "severity": "MEDIUM"   },
+    { "path": "/server-info",             "severity": "MEDIUM"   },
+    { "path": "/.vscode/settings.json",   "severity": "MEDIUM"   },
+    { "path": "/actuator/health",         "severity": "LOW"      },
+    { "path": "/actuator/env",            "severity": "HIGH"     },
+    { "path": "/actuator/mappings",       "severity": "MEDIUM"   },
+    { "path": "/.DS_Store",               "severity": "LOW"      },
+    { "path": "/phpinfo.php",             "severity": "HIGH"     },
+    { "path": "/admin",                   "severity": "LOW"      },
+    { "path": "/.htpasswd",               "severity": "CRITICAL" },
+    { "path": "/backup.zip",              "severity": "CRITICAL" },
+    { "path": "/backup.sql",              "severity": "CRITICAL" },
+    { "path": "/dump.sql",                "severity": "CRITICAL" }
+  ]
+}

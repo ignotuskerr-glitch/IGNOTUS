@@ -1,0 +1,24 @@
+id: cassandra-unauth
+info:
+  name: Cassandra Sem Autenticação
+  author: ingotus
+  severity: critical
+  description: >-
+    Instância Apache Cassandra acessível sem autenticação via HTTP management API.
+    Permite consultar keyspaces, tabelas e executar CQL arbitrário com acesso total ao banco.
+  tags: [cassandra, database, unauth, exposure, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}:8080/api/v1/auth/login"
+      - "{{BaseURL}}:8080/"
+      - "{{BaseURL}}:9042/"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["cluster_name", "keyspace", "cassandra", "CQL", "native_transport_port", "data_center"]
+        condition: or

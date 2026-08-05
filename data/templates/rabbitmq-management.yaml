@@ -1,0 +1,24 @@
+id: rabbitmq-management
+info:
+  name: Painel de Gerenciamento RabbitMQ Exposto
+  author: ingotus
+  severity: high
+  description: >-
+    Painel de controle do RabbitMQ acessível sem autenticação ou com credenciais padrão.
+    Pode expor mensageria interna e filas de tarefas do sistema.
+  tags: [rabbitmq, queue, admin, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/rabbitmq/"
+      - "{{BaseURL}}:15672/"
+      - "{{BaseURL}}:15672/api/overview"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["RabbitMQ Management", "rabbitmq_version", "overview"]
+        condition: or

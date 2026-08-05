@@ -1,0 +1,9 @@
+{
+  "name": "impact",
+  "description": "Validação focada em achados, sem testes de disponibilidade.",
+  "only_impacts": true,
+  "portscan": true,
+  "engine": "auto",
+  "workers": 20,
+  "rate_limit": 10.0
+}

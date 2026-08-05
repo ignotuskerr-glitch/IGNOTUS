@@ -1,0 +1,23 @@
+id: jenkins-exposed
+info:
+  name: Painel Jenkins Exposto
+  author: ingotus
+  severity: critical
+  description: Jenkins CI/CD sem autenticação permite execução remota de código (RCE) via Groovy Script Console.
+  tags: [jenkins, rce, cicd, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/jenkins"
+      - "{{BaseURL}}/jenkins/script"
+      - "{{BaseURL}}/script"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["Jenkins", "hudson", "Dashboard [Jenkins]"]
+        condition: or
+        case-insensitive: true

@@ -1,0 +1,23 @@
+id: kibana-exposed
+info:
+  name: Painel Kibana Exposto
+  author: ingotus
+  severity: high
+  description: Kibana acessível sem autenticação — expõe logs e dados de ElasticSearch.
+  tags: [kibana, elasticsearch, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/app/kibana"
+      - "{{BaseURL}}/kibana"
+      - "{{BaseURL}}/api/status"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["kibana", "kbn-", "elastic", "Kibana"]
+        condition: or
+        case-insensitive: true

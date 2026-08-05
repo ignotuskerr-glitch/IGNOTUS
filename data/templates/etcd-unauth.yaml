@@ -1,0 +1,27 @@
+id: etcd-unauth
+info:
+  name: etcd Cluster Sem Autenticação
+  author: ingotus
+  severity: critical
+  description: >-
+    Cluster etcd exposto sem autenticação. Contém todos os segredos do Kubernetes
+    em texto claro, incluindo tokens de service account, chaves TLS e senhas.
+  tags: [etcd, kubernetes, secrets, unauth, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}:2379/v2/keys/"
+      - "{{BaseURL}}:2379/v3/keys"
+      - "{{BaseURL}}:2379/health"
+      - "{{BaseURL}}:2380/health"
+      - "{{BaseURL}}/v2/keys/"
+      - "{{BaseURL}}/v3/members"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["action", "node", "etcd_server", "dbTotalSizeInBytes", "health", "members", "clientURLs"]
+        condition: or

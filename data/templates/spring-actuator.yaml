@@ -1,0 +1,27 @@
+id: spring-actuator
+info:
+  name: Spring Boot Actuator Exposto
+  author: ingotus
+  severity: high
+  description: >-
+    Spring Boot Actuator endpoints expostos sem autenticação.
+    /actuator/env vaza credenciais, /actuator/heapdump vaza dump de memória com dados sensíveis.
+  tags: [spring, java, actuator, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/actuator"
+      - "{{BaseURL}}/actuator/env"
+      - "{{BaseURL}}/actuator/beans"
+      - "{{BaseURL}}/actuator/mappings"
+      - "{{BaseURL}}/actuator/httptrace"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["_links", "beans", "health", "actuator", "spring"]
+        condition: or
+        case-insensitive: true

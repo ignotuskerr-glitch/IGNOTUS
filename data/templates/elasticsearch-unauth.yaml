@@ -1,0 +1,25 @@
+id: elasticsearch-unauth
+info:
+  name: Cluster ElasticSearch Acesso Não Autenticado
+  author: ingotus
+  severity: critical
+  description: >-
+    Cluster ElasticSearch acessível publicamente sem autenticação.
+    Permite leitura, modificação e exclusão arbitrária de índices e dados do banco.
+  tags: [elasticsearch, database, unauth, exposure, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/_cat/indices?v"
+      - "{{BaseURL}}/_cluster/health"
+      - "{{BaseURL}}:9200/_cat/indices?v"
+      - "{{BaseURL}}:9200/_cluster/health"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["cluster_name", "status", "yellow", "green", "red", "health", "index", "docs.count"]
+        condition: or

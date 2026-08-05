@@ -1,0 +1,28 @@
+id: exposed-ds-store
+info:
+  name: Arquivo .DS_Store Exposto
+  author: ingotus
+  severity: medium
+  description: >-
+    Arquivo .DS_Store do macOS acessível publicamente no servidor web.
+    Revela estrutura completa de diretórios do projeto, nomes de arquivos,
+    caminhos internos e pode levar a descoberta de arquivos sensíveis.
+  tags: [ds_store, macos, disclosure, exposure, recon]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/.DS_Store"
+      - "{{BaseURL}}/static/.DS_Store"
+      - "{{BaseURL}}/assets/.DS_Store"
+      - "{{BaseURL}}/public/.DS_Store"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: binary
+        binary: ["000000014200756400000000"]
+      - type: word
+        words: ["Bud1", "\x00\x00\x00\x01Bud1"]
+        condition: or

@@ -1,0 +1,8 @@
+requests
+dnspython
+colorama
+rich
+loguru
+PyJWT
+PyYAML
+

@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "mode": "strict-impact",
+  "policy": {
+    "runtime": "local-only",
+    "require_rule_id_for_validated": true,
+    "allow_unverified_as_impact": false,
+    "evidence_retention": "hash-and-metadata",
+    "secret_output": "redacted"
+  },
+  "detections": {
+    "PT-SYS-001": {"status": "not_observed", "rule_id": null, "expected": "platform and hostname query"},
+    "PT-PROC-001": {"status": "not_observed", "rule_id": null, "expected": "visible child process marker"},
+    "PT-FILE-001": {"status": "not_observed", "rule_id": null, "expected": "temporary marker file"},
+    "PT-ARCH-001": {"status": "not_observed", "rule_id": null, "expected": "temporary archive marker"},
+    "PT-OBF-001": {"status": "not_observed", "rule_id": null, "expected": "encoded benign marker"},
+    "PT-DNS-001": {"status": "not_observed", "rule_id": null, "expected": "loopback DNS resolution"},
+    "PT-TCP-001": {"status": "not_observed", "rule_id": null, "expected": "loopback TCP exchange"},
+    "PT-HTTP-001": {"status": "not_observed", "rule_id": null, "expected": "loopback HTTP marker"}
+  }
+}

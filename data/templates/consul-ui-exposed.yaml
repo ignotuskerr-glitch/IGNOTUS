@@ -1,0 +1,28 @@
+id: consul-ui-exposed
+info:
+  name: HashiCorp Consul UI/API Exposta
+  author: ingotus
+  severity: high
+  description: >-
+    HashiCorp Consul UI e API expostos publicamente. Permite visualizar todos
+    os serviços registrados, chaves KV (que podem conter segredos), e manipular
+    o registro de serviços do cluster.
+  tags: [consul, hashicorp, service-mesh, exposure, api]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/ui/"
+      - "{{BaseURL}}/v1/agent/self"
+      - "{{BaseURL}}/v1/catalog/services"
+      - "{{BaseURL}}/v1/kv/?recurse"
+      - "{{BaseURL}}:8500/v1/agent/self"
+      - "{{BaseURL}}:8500/ui/"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["datacenter", "Config", "Member", "Services", "Consul", "NodeName", "AdvertiseAddr"]
+        condition: or

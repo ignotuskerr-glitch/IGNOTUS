@@ -1,0 +1,23 @@
+id: server-status-exposed
+info:
+  name: Apache server-status Exposto
+  author: ingotus
+  severity: medium
+  description: >-
+    /server-status expõe informações internas do Apache: URLs sendo processadas,
+    IPs de clientes, queries ativas e contadores de desempenho.
+  tags: [apache, information-disclosure, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/server-status"
+      - "{{BaseURL}}/server-info"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["Apache Server Status", "Server Version", "Current Time", "Server uptime"]
+        condition: or

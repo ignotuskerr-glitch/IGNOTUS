@@ -1,0 +1,27 @@
+id: phpinfo-exposed
+info:
+  name: Arquivo phpinfo() Exposto
+  author: ingotus
+  severity: medium
+  description: >-
+    Página de diagnóstico phpinfo() acessível publicamente.
+    Expõe versão exata do PHP, variáveis de ambiente, módulos instalados e caminhos de arquivo do servidor.
+  tags: [php, phpinfo, exposure, disclosure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/phpinfo.php"
+      - "{{BaseURL}}/info.php"
+      - "{{BaseURL}}/test.php"
+      - "{{BaseURL}}/php_info.php"
+      - "{{BaseURL}}/i.php"
+      - "{{BaseURL}}/pinfo.php"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["PHP Version", "Configuration File (php.ini) Path", "System ", "Build Date"]
+        condition: or

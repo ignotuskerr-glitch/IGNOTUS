@@ -1,0 +1,22 @@
+id: grafana-exposed
+info:
+  name: Painel Grafana Exposto
+  author: ingotus
+  severity: high
+  description: Grafana acessível — pode expor métricas ou ter credenciais padrão admin/admin.
+  tags: [grafana, metrics, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/grafana"
+      - "{{BaseURL}}/grafana/login"
+      - "{{BaseURL}}/login"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["Grafana", "grafana"]
+        condition: or

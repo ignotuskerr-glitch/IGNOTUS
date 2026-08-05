@@ -1,0 +1,25 @@
+id: prometheus-metrics
+info:
+  name: Endpoint de Métricas do Prometheus Exposto
+  author: ingotus
+  severity: medium
+  description: >-
+    Endpoint de métricas do Prometheus (/metrics) acessível sem autenticação.
+    Expõe nomes de servidores internos, queries, portas e métricas de infraestrutura.
+  tags: [prometheus, metrics, devops, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/metrics"
+      - "{{BaseURL}}/prometheus/metrics"
+      - "{{BaseURL}}:9090/metrics"
+      - "{{BaseURL}}:9090/graph"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["# HELP", "# TYPE", "process_cpu_seconds_total", "go_goroutines", "http_requests_total"]
+        condition: or

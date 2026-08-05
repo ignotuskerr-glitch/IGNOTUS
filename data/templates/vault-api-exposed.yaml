@@ -1,0 +1,25 @@
+id: vault-api-exposed
+info:
+  name: HashiCorp Vault API Exposta
+  author: ingotus
+  severity: high
+  description: >-
+    HashiCorp Vault API acessível publicamente. Mesmo selado, expõe informações
+    de infraestrutura. Se não autenticado, pode vazar segredos e tokens de acesso.
+  tags: [vault, hashicorp, secrets, api, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/v1/sys/health"
+      - "{{BaseURL}}/v1/sys/seal-status"
+      - "{{BaseURL}}:8200/v1/sys/health"
+      - "{{BaseURL}}:8200/v1/auth/token/lookup-self"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200, 429, 472, 473, 501, 503]
+      - type: word
+        words: ["initialized", "sealed", "standby", "cluster_name", "version", "Vault"]
+        condition: or

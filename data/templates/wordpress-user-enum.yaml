@@ -1,0 +1,25 @@
+id: wordpress-user-enum
+info:
+  name: WordPress User Enumeration
+  author: ingotus
+  severity: medium
+  description: >-
+    WordPress expõe usernames via REST API /wp-json/wp/v2/users.
+    Combinado com xmlrpc.php habilitado, permite ataques de brute-force direcionados.
+  tags: [wordpress, cms, enum, misconfig]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/wp-json/wp/v2/users"
+      - "{{BaseURL}}/?author=1"
+      - "{{BaseURL}}/xmlrpc.php"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["\"slug\"", "\"name\"", "\"link\"", "xmlrpc", "WordPress", "author"]
+        condition: or
+        case-insensitive: true

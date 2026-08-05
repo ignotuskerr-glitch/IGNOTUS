@@ -1,0 +1,26 @@
+id: airflow-exposed
+info:
+  name: Apache Airflow Dashboard Exposto
+  author: ingotus
+  severity: high
+  description: >-
+    Apache Airflow acessível sem autenticação. Expõe DAGs, conexões
+    com credenciais de banco de dados e permite execução de tarefas arbitrárias.
+  tags: [airflow, apache, dashboard, rce, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/api/v1/dags"
+      - "{{BaseURL}}/api/v1/connections"
+      - "{{BaseURL}}/api/v1/pools"
+      - "{{BaseURL}}/home"
+      - "{{BaseURL}}:8080/api/v1/dags"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["dag_id", "dag_display_name", "Airflow", "schedule_interval", "total_entries", "fileloc"]
+        condition: or

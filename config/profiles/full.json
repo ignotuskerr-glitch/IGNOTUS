@@ -1,0 +1,10 @@
+{
+  "name": "full",
+  "description": "Perfil avançado autorizado; DoS permanece explicitamente separado.",
+  "full": true,
+  "portscan": true,
+  "engine": "auto",
+  "workers": 20,
+  "rate_limit": 5.0,
+  "requires_scope": false
+}

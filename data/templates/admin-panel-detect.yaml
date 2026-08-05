@@ -1,0 +1,30 @@
+id: admin-panel-detect
+info:
+  name: Painel Administrativo Exposto
+  author: ingotus
+  severity: high
+  description: Detecta painéis administrativos comuns acessíveis sem autenticação.
+  tags: [admin, misconfig, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/admin"
+      - "{{BaseURL}}/admin/login"
+      - "{{BaseURL}}/administrator"
+      - "{{BaseURL}}/wp-admin"
+      - "{{BaseURL}}/manager"
+      - "{{BaseURL}}/control"
+      - "{{BaseURL}}/cpanel"
+      - "{{BaseURL}}/dashboard"
+      - "{{BaseURL}}/manage"
+      - "{{BaseURL}}/backend"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200, 302]
+      - type: word
+        words: ["login", "password", "username", "admin", "dashboard", "panel", "sign in"]
+        condition: or
+        case-insensitive: true

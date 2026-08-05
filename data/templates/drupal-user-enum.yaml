@@ -1,0 +1,26 @@
+id: drupal-user-enum
+info:
+  name: Drupal Enumeração de Usuários via REST API
+  author: ingotus
+  severity: medium
+  description: >-
+    Drupal expõe dados de usuários via /user/N e /jsonapi/user/user sem autenticação.
+    Permite enumerar usuários administrativos, emails e UUIDs para ataques de
+    força bruta ou phishing direcionado.
+  tags: [drupal, cms, user-enum, exposure, medium]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/user/1?_format=json"
+      - "{{BaseURL}}/user/2?_format=json"
+      - "{{BaseURL}}/jsonapi/user/user"
+      - "{{BaseURL}}/user/1.json"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["uid", "name", "field_", "drupal", "uuid", "mail", "data.attributes"]
+        condition: or

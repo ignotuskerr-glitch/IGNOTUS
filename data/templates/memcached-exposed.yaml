@@ -1,0 +1,25 @@
+id: memcached-exposed
+info:
+  name: Memcached Exposto Publicamente
+  author: ingotus
+  severity: high
+  description: >-
+    Memcached acessível sem autenticação. Pode expor sessões de usuários,
+    tokens de autenticação e dados em cache. Também pode ser abusado para
+    ataques DDoS de amplificação UDP (fator de amplificação ~50000x).
+  tags: [memcached, cache, unauth, exposure, ddos]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}:11211/stats"
+      - "{{BaseURL}}:11211/"
+      - "{{BaseURL}}/stats"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["STAT version", "STAT pid", "STAT uptime", "memcached", "STAT curr_connections"]
+        condition: or

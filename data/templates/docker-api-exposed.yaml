@@ -1,0 +1,26 @@
+id: docker-api-exposed
+info:
+  name: Docker Remote API Exposta
+  author: ingotus
+  severity: critical
+  description: >-
+    Docker daemon API acessível sem autenticação — permite criar/executar containers
+    e obter RCE no host via volume mount em /etc.
+  tags: [docker, rce, api, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/v1.41/info"
+      - "{{BaseURL}}/v1.40/info"
+      - "{{BaseURL}}/info"
+      - "{{BaseURL}}/containers/json"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["DockerRootDir", "ServerVersion", "Containers", "NCPU"]
+        condition: or
+        case-insensitive: true

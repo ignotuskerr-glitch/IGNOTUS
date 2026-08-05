@@ -1,0 +1,30 @@
+id: graphql-introspection
+info:
+  name: GraphQL Introspection Habilitada
+  author: ingotus
+  severity: medium
+  description: >-
+    GraphQL introspection pública permite mapear todo o schema da API,
+    descobrindo tipos, queries, mutations e campos sensíveis não documentados.
+  tags: [graphql, api, exposure]
+
+requests:
+  - method: POST
+    paths:
+      - "{{BaseURL}}/graphql"
+      - "{{BaseURL}}/api/graphql"
+      - "{{BaseURL}}/v1/graphql"
+      - "{{BaseURL}}/query"
+
+    headers:
+      Content-Type: application/json
+
+    body: '{"query": "{__schema{types{name}}}" }'
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["__schema", "queryType", "mutationType", "__typename"]
+        condition: or

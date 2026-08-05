@@ -1,0 +1,29 @@
+id: swagger-ui-exposed
+info:
+  name: Swagger UI / OpenAPI Exposta
+  author: ingotus
+  severity: medium
+  description: Interface Swagger exposta — documenta todos os endpoints da API e permite testes diretos sem autenticação.
+  tags: [swagger, openapi, api, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/swagger-ui.html"
+      - "{{BaseURL}}/swagger-ui"
+      - "{{BaseURL}}/swagger"
+      - "{{BaseURL}}/api/swagger-ui.html"
+      - "{{BaseURL}}/docs"
+      - "{{BaseURL}}/api/docs"
+      - "{{BaseURL}}/redoc"
+      - "{{BaseURL}}/openapi.json"
+      - "{{BaseURL}}/swagger.json"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["swagger", "openapi", "Swagger UI", "SwaggerUI", "\"paths\""]
+        condition: or
+        case-insensitive: true

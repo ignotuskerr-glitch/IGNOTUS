@@ -1,0 +1,23 @@
+id: laravel-debug
+info:
+  name: Laravel Debug Mode Habilitado
+  author: ingotus
+  severity: high
+  description: >-
+    Laravel em modo debug expõe stack trace completo, variáveis de ambiente
+    e caminho absoluto do servidor em erros HTTP — ideal para recon.
+  tags: [laravel, php, debug, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/ingotus-probe-nonexistent-path-xyzabc"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [500]
+      - type: word
+        words: ["APP_DEBUG", "Laravel", "Whoops", "vendor/laravel", "illuminate"]
+        condition: or
+        case-insensitive: true

@@ -1,0 +1,24 @@
+id: docker-registry-api
+info:
+  name: API do Docker Registry v2 Exposta
+  author: ingotus
+  severity: high
+  description: >-
+    Interface da API v2 do Docker Registry exposta publicamente.
+    Permite listar catálogos de imagens de containers e baixar imagens privadas da empresa.
+  tags: [docker, registry, container, exposure, api]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/v2/_catalog"
+      - "{{BaseURL}}/v2/"
+      - "{{BaseURL}}:5000/v2/_catalog"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["repositories", "Docker-Distribution-Api-Version", "{}" ]
+        condition: or

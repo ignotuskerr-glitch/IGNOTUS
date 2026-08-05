@@ -1,0 +1,24 @@
+id: exposed-git
+info:
+  name: Repositório .git Exposto
+  author: ingotus
+  severity: high
+  description: >-
+    Diretório .git acessível publicamente. Permite reconstruir o código-fonte
+    completo usando git-dumper ou similar, incluindo histórico de commits e segredos.
+  tags: [git, source-code, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/.git/HEAD"
+      - "{{BaseURL}}/.git/config"
+      - "{{BaseURL}}/.git/COMMIT_EDITMSG"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["ref: refs", "[core]", "HEAD", "gitdir", "repositoryformatversion"]
+        condition: or

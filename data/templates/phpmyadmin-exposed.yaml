@@ -1,0 +1,24 @@
+id: phpmyadmin-exposed
+info:
+  name: phpMyAdmin Exposto
+  author: ingotus
+  severity: critical
+  description: Interface phpMyAdmin acessível publicamente — acesso direto ao banco de dados MySQL/MariaDB.
+  tags: [phpmyadmin, mysql, database, exposure]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/phpmyadmin"
+      - "{{BaseURL}}/pma"
+      - "{{BaseURL}}/phpMyAdmin"
+      - "{{BaseURL}}/db/phpmyadmin"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words: ["phpMyAdmin", "PMA_VERSION", "Welcome to phpMyAdmin"]
+        condition: or
+        case-insensitive: true

@@ -1,0 +1,26 @@
+id: rate-limit-bypass
+info:
+  name: Bypass de Rate Limit via Header Spoofing
+  author: ingotus
+  severity: medium
+  description: >-
+    Servidor aceita X-Forwarded-For ou X-Real-IP para determinar o IP do cliente.
+    Permite bypassar rate limiting, bloqueios por IP e captchas.
+  tags: [rate-limit, bypass, misconfig]
+
+requests:
+  - method: GET
+    paths:
+      - "{{BaseURL}}/"
+
+    headers:
+      X-Forwarded-For: "127.0.0.1"
+      X-Real-IP: "127.0.0.1"
+      X-Originating-IP: "127.0.0.1"
+      X-Client-IP: "127.0.0.1"
+      CF-Connecting-IP: "127.0.0.1"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
